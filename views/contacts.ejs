@@ -1,0 +1,14 @@
+<%- include('./partials/head') %>
+    <h1>All Contacts</h1>
+    <% contacts.forEach(contact=> {%>
+        <div>
+            <h3>
+                <%=contact.name %>
+            </h3>
+            <p>
+                <%= contact.statement %>
+            </p>
+            <a href="/contacts/<%=contact.id%>">Tell me more <%=contact.name %></a>
+        </div>
+        <%}) %>
+            <%- include('./partials/foot') %>
