@@ -1,45 +1,68 @@
 <%- include('./partials/head') %>
     <button onclick="toggleHide()">Edit User</button>
-    <a href="/contacts/<%=contact.id%>/delete">Delete</a>
-    <div id="user">
-        <h3>Name:</h3>
-        <h3>
-            <%=contact.name %>
-        </h3>
-        <p>Telefon:</p>
-        <p>
-            <%=contact.tel %>
-        </p>
-        <p>Gender:</p>
-        <p>
-            <%=contact.gender %>
-        </p>
+    <%#<a href="/contacts/contact.id/delete">Delete</a>%>
+        <%# an das data- kann jeder Name gehängt werden und in im Daten gespeichert werden%>
+            <a class="delete" data-id=<%=contact.id%>>Delete</a>
+            <div id="user">
+                <h3>Name:</h3>
+                <h3>
+                    <%=contact.name %>
+                </h3>
+                <p>Telefon:</p>
+                <p>
+                    <%=contact.tel %>
+                </p>
+                <p>Gender:</p>
+                <p>
+                    <%=contact.gender %>
+                </p>
 
-        <p>Statement:</p>
-        <p>
-            <%= contact.statement %>
-        </p>
-    </div>
+                <p>Statement:</p>
+                <p>
+                    <%= contact.statement %>
+                </p>
+            </div>
 
-    <form action="/contacts/<%=contact.id%>/edit" method="POST" id="myForm" class="hide">
-        <input type="text" name="name" placeholder="Name" value="<%=contact.name %>">
+            <form action="/contacts/<%=contact.id%>/edit" method="POST" id="myForm" class="hide">
+                <input type="text" name="name" placeholder="Name" value="<%=contact.name %>">
 
-        <input type="email" name="email" placeholder="Email" value="<%=contact.email %>">
+                <input type="email" name="email" placeholder="Email" value="<%=contact.email %>">
 
-        <input type="tel" name="tel" value="<%=contact.tel %>">
+                <input type="tel" name="tel" value="<%=contact.tel %>">
 
-        <label for="male">Male</label>
-        <input type="radio" name="gender" value="male" id="male" <%=contact.gender==="male" ? "checked" : "" %>>
+                <label for="male">Male</label>
+                <input type="radio" name="gender" value="male" id="male" <%=contact.gender==="male" ? "checked" : "" %>>
 
-        <label for="female">Female</label>
-        <input type="radio" name="gender" value="female" id="female" <%=contact.gender==="female" ? "checked" : "" %>>
+                <label for="female">Female</label>
+                <input type="radio" name="gender" value="female" id="female" <%=contact.gender==="female" ? "checked"
+                    : "" %>>
 
-        <label for="other">Other</label>
-        <input type="radio" name="gender" value="other" id="other" <%=contact.gender==="other" ? "checked" : "" %>>
+                <label for="other">Other</label>
+                <input type="radio" name="gender" value="other" id="other" <%=contact.gender==="other" ? "checked" : ""
+                    %>>
 
-        <textarea name="statement" cols="30" rows="10"
-            placeholder="Statement about yourself"><%=contact.statement%></textarea>
-        <input type="submit" value="Send">
-    </form>
+                <textarea name="statement" cols="30" rows="10"
+                    placeholder="Statement about yourself"><%=contact.statement%></textarea>
+                <input type="submit" value="Send">
+            </form>
+            <script>
+                // refernez zu dem A Tag, das löschen soll
+                const trash = document.querySelector('a.delete')
+                trash.addEventListener('click', (e) => {
+                    console.log(e)
+                    // das ist das Ziel an den wir unseren delete req schicken wollen
+                    const endpoint = `/contacts/${trash.dataset.id}`
+                    // console.log(endpoint)
+                    // hier wird die DELETE Methode im Objekt spezifiziert
+                    fetch(endpoint, {
+                        method: 'DELETE'
+                    })
+                        // wir bekommen eine Antwort vom Backend, das wir jedoch noch aus JSON wieder zurückumwandeln müssen
+                        .then(response => response.json())
+                        // wir leiten auf die Seite weiter, die aus dem Backend kommt
+                        .then(data => window.location.href = data.redirect)
+                        .catch(err => console.log(err))
+                })
+            </script>
 
-    <%- include('./partials/foot') %>
+            <%- include('./partials/foot') %>
